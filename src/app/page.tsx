@@ -27,6 +27,16 @@ type DataPoint = {
   polyCustom: number;
 };
 
+type CurveVisibility = {
+  factorial: boolean;
+  luks: boolean;
+  babai: boolean;
+  poly1: boolean;
+  poly2: boolean;
+  poly3: boolean;
+  polyCustom: boolean;
+};
+
 const OPS_PER_SECOND_LOG10 = 9;
 const SECONDS_PER_YEAR_LOG10 = Math.log10(60 * 60 * 24 * 365);
 
@@ -79,7 +89,22 @@ export default function HomePage() {
   const [n, setN] = useState(10);
   const [babaiC, setBabaiC] = useState(2);
   const [polyK, setPolyK] = useState(3);
-  const [showCustomPolynomial, setShowCustomPolynomial] = useState(false);
+  const [visibleCurves, setVisibleCurves] = useState<CurveVisibility>({
+    factorial: true,
+    luks: true,
+    babai: true,
+    poly1: true,
+    poly2: true,
+    poly3: true,
+    polyCustom: false,
+  });
+
+  const toggleCurve = (curve: keyof CurveVisibility) => {
+    setVisibleCurves((prev) => ({
+      ...prev,
+      [curve]: !prev[curve],
+    }));
+  };
 
   const data = useMemo<DataPoint[]>(() => {
     const generated: DataPoint[] = [];
@@ -180,30 +205,64 @@ export default function HomePage() {
               </div>
 
               <div className="rounded-xl border border-border/70 bg-secondary/40 p-4">
-                <p className="mb-3 text-sm font-semibold">Polynomial Display</p>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowCustomPolynomial(false)}
-                    className={`rounded-lg px-3 py-2 text-sm transition ${
-                      !showCustomPolynomial
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-white/70 text-foreground hover:bg-white"
-                    }`}
-                  >
-                    Show n, n^2, n^3
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowCustomPolynomial(true)}
-                    className={`rounded-lg px-3 py-2 text-sm transition ${
-                      showCustomPolynomial
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-white/70 text-foreground hover:bg-white"
-                    }`}
-                  >
-                    Show custom n^k
-                  </button>
+                <p className="mb-3 text-sm font-semibold">Curve Checklist</p>
+                <div className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={visibleCurves.factorial}
+                      onChange={() => toggleCurve("factorial")}
+                    />
+                    n! (Brute Force)
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={visibleCurves.luks}
+                      onChange={() => toggleCurve("luks")}
+                    />
+                    2^(sqrt(n log n))
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={visibleCurves.babai}
+                      onChange={() => toggleCurve("babai")}
+                    />
+                    2^(log(n)^c)
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={visibleCurves.poly1}
+                      onChange={() => toggleCurve("poly1")}
+                    />
+                    n
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={visibleCurves.poly2}
+                      onChange={() => toggleCurve("poly2")}
+                    />
+                    n^2
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={visibleCurves.poly3}
+                      onChange={() => toggleCurve("poly3")}
+                    />
+                    n^3
+                  </label>
+                  <label className="flex items-center gap-2 sm:col-span-2">
+                    <input
+                      type="checkbox"
+                      checked={visibleCurves.polyCustom}
+                      onChange={() => toggleCurve("polyCustom")}
+                    />
+                    n^k (custom)
+                  </label>
                 </div>
 
                 <div className="mt-4 space-y-2">
@@ -255,31 +314,39 @@ export default function HomePage() {
                     />
                     <Legend />
 
-                    <Line type="monotone" dataKey="factorial" name="n! (Brute Force)" stroke="#e4572e" strokeWidth={3} dot={false} />
-                    <Line
-                      type="monotone"
-                      dataKey="luks"
-                      name="2^(sqrt(n log n))"
-                      stroke="#0f6f87"
-                      strokeWidth={2.5}
-                      dot={false}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="babai"
-                      name={`2^(log(n)^${babaiC})`}
-                      stroke="#3ba99c"
-                      strokeWidth={2.5}
-                      dot={false}
-                    />
-
-                    {!showCustomPolynomial ? (
-                      <>
-                        <Line type="monotone" dataKey="poly1" name="n" stroke="#6a994e" strokeWidth={2} dot={false} />
-                        <Line type="monotone" dataKey="poly2" name="n^2" stroke="#4c7d27" strokeWidth={2} dot={false} />
-                        <Line type="monotone" dataKey="poly3" name="n^3" stroke="#2e5c12" strokeWidth={2.6} dot={false} />
-                      </>
-                    ) : (
+                    {visibleCurves.factorial && (
+                      <Line type="monotone" dataKey="factorial" name="n! (Brute Force)" stroke="#e4572e" strokeWidth={3} dot={false} />
+                    )}
+                    {visibleCurves.luks && (
+                      <Line
+                        type="monotone"
+                        dataKey="luks"
+                        name="2^(sqrt(n log n))"
+                        stroke="#0f6f87"
+                        strokeWidth={2.5}
+                        dot={false}
+                      />
+                    )}
+                    {visibleCurves.babai && (
+                      <Line
+                        type="monotone"
+                        dataKey="babai"
+                        name={`2^(log(n)^${babaiC})`}
+                        stroke="#3ba99c"
+                        strokeWidth={2.5}
+                        dot={false}
+                      />
+                    )}
+                    {visibleCurves.poly1 && (
+                      <Line type="monotone" dataKey="poly1" name="n" stroke="#6a994e" strokeWidth={2} dot={false} />
+                    )}
+                    {visibleCurves.poly2 && (
+                      <Line type="monotone" dataKey="poly2" name="n^2" stroke="#4c7d27" strokeWidth={2} dot={false} />
+                    )}
+                    {visibleCurves.poly3 && (
+                      <Line type="monotone" dataKey="poly3" name="n^3" stroke="#2e5c12" strokeWidth={2.6} dot={false} />
+                    )}
+                    {visibleCurves.polyCustom && (
                       <Line
                         type="monotone"
                         dataKey="polyCustom"
