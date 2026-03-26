@@ -12,7 +12,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Flame, Rocket, Sigma } from "lucide-react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
@@ -155,7 +154,7 @@ export default function HomePage() {
           <Card className="animate-fade-up" style={{ animationDelay: "120ms" }}>
             <CardHeader>
               <CardTitle>Interactive Controls</CardTitle>
-              <CardDescription>Adjust n, Babai's c, and polynomial options.</CardDescription>
+              <CardDescription>Adjust n, Babai&apos;s c, and polynomial options.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
@@ -224,16 +223,16 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          <Card className="animate-fade-up" style={{ animationDelay: "180ms" }}>
+          <Card className="animate-fade-up min-w-0" style={{ animationDelay: "180ms" }}>
             <CardHeader>
               <CardTitle>Complexity Curves (log10 scale)</CardTitle>
               <CardDescription>
                 This chart compares operation growth up to n={n}. Lower is better.
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="h-[460px] w-full rounded-xl bg-white/70 p-2">
-                <ResponsiveContainer width="100%" height="100%">
+            <CardContent className="min-w-0">
+              <div className="h-[460px] min-h-[320px] w-full min-w-0 rounded-xl bg-white/70 p-2">
+                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={320}>
                   <LineChart data={data} margin={{ top: 20, right: 26, left: 10, bottom: 10 }}>
                     <CartesianGrid strokeDasharray="4 4" stroke="#7b9ea84f" />
                     <XAxis dataKey="n" tick={{ fill: "#35545b", fontSize: 12 }} />
@@ -249,7 +248,10 @@ export default function HomePage() {
                     />
                     <Tooltip
                       contentStyle={{ borderRadius: "12px", borderColor: "#a8c6cc" }}
-                      formatter={(value: number) => [`~10^${value.toFixed(2)} ops`, "Scale"]}
+                      formatter={(value) => {
+                        const numeric = Number(value ?? 0);
+                        return [`~10^${numeric.toFixed(2)} ops`, "Scale"];
+                      }}
                     />
                     <Legend />
 
@@ -317,15 +319,15 @@ export default function HomePage() {
         <Card className="animate-fade-up" style={{ animationDelay: "420ms" }}>
           <CardContent className="flex flex-wrap gap-4 pt-6 text-sm text-muted-foreground">
             <p className="flex items-center gap-2">
-              <Flame className="h-4 w-4 text-[#e4572e]" />
+              <span className="text-base leading-none text-[#e4572e]">●</span>
               Brute force n! grows explosively.
             </p>
             <p className="flex items-center gap-2">
-              <Sigma className="h-4 w-4 text-[#3ba99c]" />
-              Babai's quasi-polynomial is the key breakthrough.
+              <span className="text-base leading-none text-[#3ba99c]">●</span>
+              Babai&apos;s quasi-polynomial is the key breakthrough.
             </p>
             <p className="flex items-center gap-2">
-              <Rocket className="h-4 w-4 text-[#2e5c12]" />
+              <span className="text-base leading-none text-[#2e5c12]">●</span>
               Polynomial time remains the target destination.
             </p>
           </CardContent>
