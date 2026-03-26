@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 32 32% 96%;
+  --foreground: 210 16% 18%;
+  --card: 0 0% 100%;
+  --card-foreground: 210 16% 16%;
+  --primary: 198 83% 38%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 187 55% 92%;
+  --secondary-foreground: 198 58% 20%;
+  --muted: 200 35% 93%;
+  --muted-foreground: 210 12% 42%;
+  --accent: 24 94% 58%;
+  --accent-foreground: 20 28% 16%;
+  --border: 204 30% 84%;
+  --input: 204 30% 84%;
+  --ring: 198 83% 38%;
+  --radius: 1rem;
+}
+
+* {
+  @apply border-border;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  @apply bg-background text-foreground;
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(255, 145, 77, 0.28), transparent 35%),
+    radial-gradient(circle at 80% 22%, rgba(27, 148, 179, 0.26), transparent 42%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.95), rgba(229, 243, 247, 0.9));
+}
+
+.font-body {
+  font-family: var(--font-body), sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-display), sans-serif;
+}
+
+.grid-glow {
+  background-image:
+    linear-gradient(to right, rgba(12, 61, 74, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(12, 61, 74, 0.08) 1px, transparent 1px);
+  background-size: 34px 34px;
+}
+
+.gradient-title {
+  background: linear-gradient(110deg, #0f6f87 0%, #2d9f8d 35%, #ee7d38 82%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
